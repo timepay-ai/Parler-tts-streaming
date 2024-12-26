@@ -63,8 +63,8 @@ class InferlessPythonModel:
         # Process and stream the generated audio
         for new_audio in self.streamer:
             # Convert numpy array to MP3 and encode as base64 string
-            mp3_bytes = self.numpy_to_mp3(new_audio, sampling_rate=self.streamer.sampling_rate)
-            mp3_str = base64.b64encode(mp3_bytes).decode('utf-8')
+            # mp3_bytes = self.numpy_to_mp3(new_audio, sampling_rate=self.streamer.sampling_rate)
+            mp3_str = base64.b64encode(new_audio).decode('utf-8')
             
             # Prepare and send the output dictionary
             output_dict = {}
