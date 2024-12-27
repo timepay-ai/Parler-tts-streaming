@@ -12,13 +12,13 @@ class ParlerTTSStreamer(BaseStreamer):
         self.device = "cuda:0"
         torch_dtype = torch.float16
        
-        repo_id = "parler-tts/parler_tts_mini_v0.1"
+        repo_id = "parler-tts/parler-tts-mini-v1.1"
         self.tokenizer = AutoTokenizer.from_pretrained(repo_id)
         self.feature_extractor = AutoFeatureExtractor.from_pretrained(repo_id)
 
         self.SAMPLE_RATE = self.feature_extractor.sampling_rate
 
-        self.model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True).to(self.device)
+        self.model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id, attn_implementation="flash_attention_2", torch_dtype=torch_dtype, ).to(self.device)
         self.decoder = self.model.decoder
         self.audio_encoder = self.model.audio_encoder
         self.generation_config = self.model.generation_config
@@ -26,7 +26,7 @@ class ParlerTTSStreamer(BaseStreamer):
         self.sampling_rate = self.model.audio_encoder.config.sampling_rate
         frame_rate = self.model.audio_encoder.config.frame_rate
 
-        play_steps_in_s=2.0
+        play_steps_in_s=0.5
         play_steps = int(frame_rate * play_steps_in_s)
 
         # variables used in the streaming process
